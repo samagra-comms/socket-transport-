@@ -1,5 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { v4 as uuid } from 'uuid';
 
 @Injectable()
@@ -10,10 +11,10 @@ export class AppService {
 
     private logger: Logger = new Logger('AppService');
 
-    constructor(private httpService: HttpService) { }
+    constructor(private httpService: HttpService, private configService: ConfigService) { }
 
     async requestToAdapter(req) {
-        const adapterEndpoint = "http://localhost:3010/botMsg/adapterInbound";
+        const adapterEndpoint = this.configService.get('ADAPTER_URL')
         try {
             const params = JSON.stringify(req);
             this.httpService.post(adapterEndpoint, params, {
