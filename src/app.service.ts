@@ -22,9 +22,9 @@ export class AppService {
                         'Content-Type': 'application/json',
                     },
                 }).subscribe((res) => {
-                    console.log("RESPNSE FROM 3010: ", res.data);
+                    console.log("RESPNSE FROM ADAPTER: ", res.data);
                 }, (err) => {
-                    console.log("RESPNSE FROM 3010: ", err);
+                    console.log("RESPNSE FROM ADAPTER: ", err);
                 });
             
         } catch (error) {
