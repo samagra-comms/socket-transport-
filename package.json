@@ -1,8 +1,8 @@
 {
-  "name": "simple-demo",
+  "name": "bot-socket-service",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "Nikunj Beladiya",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
