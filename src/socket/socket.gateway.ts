@@ -1,5 +1,5 @@
 import { Logger } from '@nestjs/common';
-import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { AppService } from 'src/app.service';
 
@@ -40,8 +40,15 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   @SubscribeMessage('botRequest')
   async handleMessage(client: Socket, { content, to }: any) {
     this.logger.log({ msg: `Receiving chatbot request for ${to} with ${JSON.stringify(content)} ` });
-    this.appService.requestToAdapter({content, to})
+    this.appService.requestToAdapter({content, to}, this.server)
     return {}
+  }
+
+  // load testing event
+  @SubscribeMessage('client to server event')
+  handleClientToServerMessage(client: Socket, message: any): WsResponse<string> {
+    this.logger.log({ msg: `LoadTest: Sending response to client` });
+    return { event: 'server to client event', data: "response" }
   }
 
 }
