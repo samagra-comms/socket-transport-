@@ -30,3 +30,7 @@ cd bot-socket-service
 npm i
 npm run start
 ```
+
+Docs
+
+[High Level Design](https://app.diagrams.net/#G1v8l6Xd6e00UnBC9A0PbAEnUMoSo5iE0C)
