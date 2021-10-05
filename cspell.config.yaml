@@ -1,0 +1,7 @@
+version: "0.2"
+ignorePaths: ['*/chatResponses.ts']
+dictionaryDefinitions: []
+dictionaries: []
+words: ['nestjs','websockets']
+ignoreWords: []
+import: []

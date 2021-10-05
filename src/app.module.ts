@@ -1,23 +1,32 @@
-import { HttpModule } from '@nestjs/axios';
-import { Logger, Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import {  utilities as nestWinstonModuleUtilities, WinstonModule } from 'nest-winston';
-import path from 'path';
 import * as winston from 'winston';
+
+import { Logger, Module } from '@nestjs/common';
+import {
+  WinstonModule,
+  utilities as nestWinstonModuleUtilities,
+} from 'nest-winston';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { config } from './config/config';
+import { ConfigModule } from '@nestjs/config';
+import { HttpModule } from '@nestjs/axios';
 import { SocketGateway } from './socket/socket.gateway';
+import { config } from './config/config';
+import path from 'path';
 
 @Module({
   imports: [
     WinstonModule.forRootAsync({
       useFactory: () => ({
         format: winston.format.combine(
-            winston.format.timestamp({
-              format: 'YYYY-MM-DD HH:mm:ss'
-            }),
-            winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`+(info.splat!==undefined?`${info.splat}`:" "))
+          winston.format.timestamp({
+            format: 'YYYY-MM-DD HH:mm:ss',
+          }),
+          winston.format.printf(
+            (info) =>
+              `${info.timestamp} ${info.level}: ${info.message}` +
+              (info.splat !== undefined ? `${info.splat}` : ' '),
+          ),
         ),
         transports: [
           new winston.transports.Console({
@@ -50,6 +59,6 @@ import { SocketGateway } from './socket/socket.gateway';
   ],
   controllers: [AppController],
   providers: [AppService, SocketGateway, Logger],
-  exports: [SocketGateway]
+  exports: [SocketGateway],
 })
 export class AppModule {}

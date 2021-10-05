@@ -1,8 +1,7 @@
-import { ConfigService } from '@nestjs/config';
-import { NestFactory } from '@nestjs/core';
-import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
-import { RedisIoAdapter } from './adapters/redis-io.adapter';
 import { AppModule } from './app.module';
+import { NestFactory } from '@nestjs/core';
+import { RedisIoAdapter } from './adapters/redis-io.adapter';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { config } from './config/config';
 
 async function bootstrap() {
@@ -10,6 +9,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
   app.useWebSocketAdapter(new RedisIoAdapter(app));
-  await app.listen(appConfig.port).then(() => console.log(`App is running on ${appConfig.port}`));
+  await app
+    .listen(appConfig.port)
+    .then(() => console.log(`App is running on ${appConfig.port}`));
 }
 bootstrap();
