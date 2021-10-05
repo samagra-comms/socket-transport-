@@ -1,8 +1,9 @@
-# Chatbot web socket service
+# Socket transport layer for UCI Messages
+Socket based transport and delivery of messages *to and from* UCI (since UCI is Rest based only)
 
-web socket service is used to communicate between chatbot client and UCI adapter.
+[UCI] <---> [Socker Transport Layer] <---> [Frontend]
+
 ## Features
-
 - Takes request from chatbot client and send it to UCI adapter to get response and return it back to bot client
 
 ## Tech
@@ -12,10 +13,9 @@ web socket service is used to communicate between chatbot client and UCI adapter
 - [redis] - for socket io redis adapter
 
 ## Installation
+Service requires [Node.js](https://nodejs.org/) v12+ to run.
 
-chatbot websocket service requires [Node.js](https://nodejs.org/) v12+ to run.
-
-clone the repo and set the .env variable 
+Clone the repo and set the .env variable 
 ```
 REDIS_PORT={REDIS PORT}
 SERVER_PORT={SERVER PORT}
@@ -31,6 +31,5 @@ npm i
 npm run start
 ```
 
-Docs
-
-[High Level Design](https://app.diagrams.net/#G1v8l6Xd6e00UnBC9A0PbAEnUMoSo5iE0C)
+## Docs
+- [High Level Design](https://app.diagrams.net/#G1v8l6Xd6e00UnBC9A0PbAEnUMoSo5iE0C)
