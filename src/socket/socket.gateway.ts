@@ -1,9 +1,9 @@
 import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-
 import { AppService } from 'src/app.service';
 import { Logger } from '@nestjs/common';
-
+import { config } from '../config/config';
+const appConfig = config().app;
 @WebSocketGateway()
 export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
@@ -26,7 +26,7 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     client['sessionID'] = sessionID;
     client['userID'] = userID;
     client.join(userID);
-    client.emit("session", {
+    client.emit(appConfig.bot_session_event, {
       sessionID,
       userID,
       socketID: client.id
@@ -38,7 +38,7 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   }
 
 
-  @SubscribeMessage('botRequest')
+  @SubscribeMessage(appConfig.bot_request_event)
   async handleMessage(client: Socket, { content, to }: any) {
     this.logger.log({ msg: `Receiving chatbot request for ${to} with ${JSON.stringify(content)} ` });
     this.appService.requestToAdapter({content, to}, this.server)
