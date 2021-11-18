@@ -2,13 +2,10 @@ import { Injectable, Logger } from '@nestjs/common';
 
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { jsonData } from './chatResponses';
+import { jsonData } from '../test/chatResponses';
 import { v4 as uuid } from 'uuid';
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World!';
-  }
 
   private logger: Logger = new Logger('AppService');
 
@@ -37,17 +34,15 @@ export class AppService {
         })
         .subscribe(
           (res) => {
-            console.log('RESPNSE FROM ADAPTER: ', res.data);
+            this.logger.log({ message: `Response from Adapter => ${res.data}`});
           },
           (err) => {
-            console.log('RESPNSE FROM ADAPTER: ', err);
+            this.logger.log({ message: `Error from Adapter => ${err}`});
           },
         );
     } catch (error) {
       if (error) {
-        this.logger.log({
-          msg: `Sending request to adapter failed => ${error.message}`,
-        });
+        this.logger.log({ message: `Sending request to adapter failed => ${error.message}`});
       }
     }
   }
