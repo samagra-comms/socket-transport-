@@ -24,7 +24,7 @@ import path from 'path';
           }),
           winston.format.printf(
             (info) =>
-              `${info.timestamp} ${info.level}: ${info.message}` +
+              `${info.timestamp} ${info.level} [${info.context}] :  ${info.message}` +
               (info.splat !== undefined ? `${info.splat}` : ' '),
           ),
         ),
