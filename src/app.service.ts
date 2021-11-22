@@ -25,7 +25,18 @@ export class AppService {
   sendRequestToAdapter(req) {
     const adapterEndpoint = this.configService.get('ADAPTER_URL');
     try {
-      const params = JSON.stringify(req);
+      const reqst = {
+        "body": req.content.body,
+        "userId":req.content.userId,
+        "appId":req.content.appId,
+        "channel":req.content.channel,
+        "from":req.content.From,
+        "context":req.content.context,
+        "to":req.to,
+        "messageId": this.randomId()
+      }
+      const params = JSON.stringify(reqst);
+      this.logger.log({ message: `Adapter Request => ${params}`});
       this.httpService
         .post(adapterEndpoint, params, {
           headers: {
@@ -34,7 +45,7 @@ export class AppService {
         })
         .subscribe(
           (res) => {
-            this.logger.log({ message: `Response from Adapter => ${res.data}`});
+            this.logger.log({ message: `Response from Adapter => ${JSON.stringify(res.data)}`});
           },
           (err) => {
             this.logger.log({ message: `Error from Adapter => ${err}`});

@@ -12,11 +12,11 @@ export class AppController {
   @Post('/adapterOutbound')
   adapterOutbound(@Request() req) {
     try {
-      this.logger.log('Received Response from Adapter');
-      const { botResponse, job } = req.body;
+      this.logger.log(`Received Response from Adapter => ${JSON.stringify(req.body)}`);
+      const { message, to } = req.body;
       this.wsg.server
-        .to(job.to)
-        .emit(this.appConfig.bot_request_event, { content: botResponse, from: job.to });
+        .to(to)
+        .emit('botResponse', { content: message, from: to });
       return { status: 'OK' };
     } catch (error) {
       this.logger.error('Error while emitting bot response', error);
