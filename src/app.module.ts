@@ -12,6 +12,8 @@ import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 import { SocketGateway } from './socket/socket.gateway';
 import { config } from './config/config';
+import { TerminusModule } from '@nestjs/terminus';
+import { HealthController } from './health/health.controller';
 import path from 'path';
 
 @Module({
@@ -56,8 +58,9 @@ import path from 'path';
       isGlobal: true,
       load: [config],
     }),
+    TerminusModule
   ],
-  controllers: [AppController],
+  controllers: [AppController, HealthController],
   providers: [AppService, SocketGateway, Logger],
   exports: [SocketGateway],
 })
