@@ -25,7 +25,18 @@ export class AppService {
   sendRequestToAdapter(req) {
     const adapterEndpoint = this.configService.get('ADAPTER_URL');
     try {
-      const params = JSON.stringify(req);
+      const reqst = {
+        "body": req.content.body,
+        "userId":req.content.userId,
+        "appId":req.content.appId,
+        "channel":req.content.channel,
+        "from":req.content.From,
+        "context":req.content.context,
+        "to":req.to,
+        "messageId": this.randomId()
+      }
+      const params = JSON.stringify(reqst);
+      this.logger.log({ message: `Adapter Request => ${params}`});
       this.httpService
         .post(adapterEndpoint, params, {
           headers: {
