@@ -11,7 +11,7 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
   @WebSocketServer()
   server: Server;
-
+  
   constructor(private readonly appService: AppService) {
   }
 
@@ -38,7 +38,7 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   }
 
 
-  @SubscribeMessage(appConfig.bot_request_event)
+  @SubscribeMessage('botRequest')
   async handleMessage(client: Socket, { content, to }: any) {
     this.logger.log({ msg: `Receiving chatbot request for ${to} with ${JSON.stringify(content)} ` });
     this.appService.requestToAdapter({content, to}, this.server)

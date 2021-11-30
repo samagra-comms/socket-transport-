@@ -45,10 +45,10 @@ export class AppService {
         })
         .subscribe(
           (res) => {
-            this.logger.log({ message: `Response from Adapter => ${JSON.stringify(res.data)}`});
+            this.logger.log({ message: `Request sent to UCI web Adapter`});
           },
           (err) => {
-            this.logger.log({ message: `Error from Adapter => ${err}`});
+            this.logger.log({ message: `Error while requesting UCI web Adapter => ${err}`});
           },
         );
     } catch (error) {
