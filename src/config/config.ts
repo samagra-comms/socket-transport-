@@ -3,7 +3,8 @@ export const config = () => ({
     redisport: process.env.REDIS_PORT,
     redishost: process.env.REDIS_HOST,
     port: process.env.SERVER_PORT,
-    bot_session_event: process.env.SKT_SESSION_EVT || 'session'
+    bot_session_event: process.env.SKT_SESSION_EVT || 'session',
+    bot_namespace: process.env.BOT_NAMESPACE || 'uci-transport-socket',
   },
   ADAPTER_URL: process.env.ADAPTER_URL,
   database: {},
