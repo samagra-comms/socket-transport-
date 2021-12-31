@@ -4,7 +4,14 @@ import { AppService } from 'src/app.service';
 import { Logger } from '@nestjs/common';
 import { config } from '../config/config';
 const appConfig = config().app;
-@WebSocketGateway()
+
+@WebSocketGateway({
+  cors: {
+    origin: '*',
+  },
+  namespace: appConfig.bot_namespace,
+  path: `/${appConfig.bot_namespace}/socket.io`
+})
 export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
   private logger: Logger = new Logger('ApiGateway');
