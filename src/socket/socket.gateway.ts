@@ -5,7 +5,11 @@ import { Logger } from '@nestjs/common';
 import { config } from '../config/config';
 const appConfig = config().app;
 
-@WebSocketGateway()
+@WebSocketGateway({
+  timeout: appConfig.socket_timeout,
+  pingTimeout: appConfig.socket_ping_timeout,
+  pingInterval: appConfig.socket_ping_interval
+})
 export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
   private logger: Logger = new Logger('ApiGateway');
