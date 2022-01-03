@@ -38,7 +38,7 @@ export class AppService {
       const params = JSON.stringify(reqst);
       this.logger.log({ message: `Adapter Request => ${params}`});
       this.httpService
-        .post(adapterEndpoint, params, {
+        .post(`${adapterEndpoint}/diksha/web`, params, {
           headers: {
             'Content-Type': 'application/json',
           },
