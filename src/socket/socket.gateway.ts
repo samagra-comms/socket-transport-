@@ -50,6 +50,13 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     return {}
   }
 
+  @SubscribeMessage('endConnection')
+  async handleEndConnection(client: Socket) {
+    this.logger.log({msg: "The client has closed the bot"});
+    client.disconnect(true);
+    return {}
+  }
+
   // load testing event
   @SubscribeMessage('client to server event')
   handleClientToServerMessage(client: Socket, message: any): WsResponse<string> {
