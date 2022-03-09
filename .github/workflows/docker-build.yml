@@ -23,6 +23,7 @@ jobs:
     timeout-minutes: 40
     steps:
     - uses: actions/checkout@v2
+    - run: env
     - name: Build container image
       run: docker build -t test-container-image .
     - name: Start Redis
