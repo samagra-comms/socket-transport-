@@ -22,7 +22,7 @@ jobs:
       ADAPTER_URL: "http://143.110.255.220:8080/pwa/web"
     timeout-minutes: 40
     steps:
-    - run: apt install curl
+    - run: curl --version
     - uses: actions/checkout@v2
     - run: env
     - name: Build container image
