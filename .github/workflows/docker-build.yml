@@ -22,6 +22,7 @@ jobs:
       ADAPTER_URL: "http://143.110.255.220:8080/pwa/web"
     timeout-minutes: 40
     steps:
+    - run: apt install curl
     - uses: actions/checkout@v2
     - run: env
     - name: Build container image
@@ -38,9 +39,9 @@ jobs:
     #   with:
     #     time: 100s
     - run: docker logs test-container
-    - run: curl -s 0.0.0.0:3005/health
-    - name: Wait for Service to start
-      run: while ! curl -s 0.0.0.0:3005/health; do sleep 1; done
-      timeout-minutes: 1
+    # - run: curl -s 0.0.0.0:3005/health
+    # - name: Wait for Service to start
+    #   run: while ! curl -s 0.0.0.0:3005/health; do sleep 1; done
+    #   timeout-minutes: 1
     - name: Check API health
       run: curl -s 0.0.0.0:3005/health
