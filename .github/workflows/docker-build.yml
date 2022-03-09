@@ -20,6 +20,9 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build container image
       run: docker build -t test-container-image .
+    - name: Start Redis
+      run: docker run --name enketo-redis-cache -p 6380:6379 -d redis
+      timeout-minutes: 5
     - name: Launch container
       run: docker run -dp 3005:3005 test-container-image
       timeout-minutes: 5
