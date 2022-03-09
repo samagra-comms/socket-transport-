@@ -8,6 +8,7 @@ on:
         required: true 
         type: boolean
   push:
+    branches: [master, uci-pwa]
     tags:
       - 'v*.*.*'
 
