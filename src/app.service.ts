@@ -27,6 +27,7 @@ export class AppService {
     try {
       const reqst = {
         body: req.content.text,
+        media: req.content.media,
         userId: req.content.userId,
         appId: req.content.appId,
         channel: req.content.channel,
