@@ -1,23 +1,37 @@
-import { Controller, Logger, Post, Request } from '@nestjs/common';
+import {
+  CACHE_MANAGER,
+  Controller,
+  Get,
+  Inject,
+  Logger,
+  Post,
+  Request,
+} from '@nestjs/common';
 import { SocketGateway } from './socket/socket.gateway';
 import { config } from './config/config';
+import { Cache } from 'cache-manager';
 @Controller('botMsg')
 export class AppController {
   private logger: Logger = new Logger('AppController');
   public appConfig;
-  constructor(private readonly wsg: SocketGateway) {
+  constructor(
+    private readonly wsg: SocketGateway,
+    @Inject('CustomCacheToken') private cacheManager: Cache,
+  ) {
     this.appConfig = config().app;
   }
 
   @Post('/adapterOutbound')
-  adapterOutbound(@Request() req) {
+  async adapterOutbound(@Request() req) {
     try {
       this.logger.log(
         `Received Response from Adapter => ${JSON.stringify(req.body)}`,
       );
       const { message, to } = req.body;
+      console.log('Sending message to', to);
+      const clientId: string = await this.cacheManager.get(to);
       this.wsg.server
-        .to(to)
+        .to(clientId)
         .emit('botResponse', { content: message, from: to });
       return { status: 'OK' };
     } catch (error) {

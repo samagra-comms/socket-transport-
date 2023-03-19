@@ -1,4 +1,4 @@
-import { CACHE_MANAGER, Inject, Logger } from '@nestjs/common';
+import { CACHE_MANAGER, Inject, Logger, UseGuards } from '@nestjs/common';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -9,11 +9,13 @@ import {
   WsResponse,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { Cache } from 'cache-manager';
 
 import { AppService } from 'src/app.service';
 import { config } from '../config/config';
 
 import getUuidByString = require('uuid-by-string');
+import { WsGuard } from 'src/guard/ws.guard';
 
 const appConfig = config().app;
 
@@ -30,16 +32,23 @@ export class SocketGateway
   @WebSocketServer()
   server: Server;
 
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    @Inject('CustomCacheToken') private cacheManager: Cache,
+  ) {}
 
   afterInit(server: Server) {
     this.logger.log('Client initialize');
   }
 
-  handleConnection(client: Socket, ...args: any[]) {
+  async handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(`Client is connected with ${client.id}`);
-    const sessionID = this.appService.randomId();
-    const userID = this.appService.randomId();
+    this.logger.log(
+      `Client is connected with ${client.handshake.query.deviceId}`,
+    );
+    const sessionID = client.handshake.query.deviceId;
+    const userID = client.handshake.query.deviceId as string;
+    await this.cacheManager.set(userID, client.id, 86400 * 1000);
     client['sessionID'] = sessionID;
     client['userID'] = userID;
     client.join(userID);
@@ -50,10 +59,12 @@ export class SocketGateway
     });
   }
 
-  handleDisconnect(client: Socket) {
+  async handleDisconnect(client: Socket) {
     this.logger.log(`Client is disconnected = ${client.id}`);
+    await this.cacheManager.set(client['userID'], null, 86400 * 1000);
   }
 
+  @UseGuards(WsGuard)
   @SubscribeMessage('botRequest')
   async handleMessage(client: Socket, { content, to }: any) {
     this.logger.log({
@@ -69,6 +80,7 @@ export class SocketGateway
   @SubscribeMessage('endConnection')
   async handleEndConnection(client: Socket) {
     this.logger.log({ msg: 'The client has closed the bot' });
+    await this.cacheManager.set(client['userID'], null, 86400 * 1000);
     client.disconnect(true);
     return {};
   }

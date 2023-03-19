@@ -12,13 +12,26 @@ services:
 
   cache:
     container_name: cache
-    image: redis:latestgit
+    image: redis:latest
     env_file:
       - .env
     ports:
       - '6379:6379'
-    command: ['redis-server', '--appendonly', 'yes']
+    command: [ 'redis-server', '--appendonly', 'yes' ]
     hostname: redis
     volumes:
       - ./redis-data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+
+  userCache:
+    container_name: userCache
+    image: redis:latest
+    env_file:
+      - .env
+    ports:
+      - '6389:6379'
+    command: [ 'redis-server', '--appendonly', 'yes' ]
+    hostname: redis
+    volumes:
+      - ./userCache-data:/data
       - ./redis.conf:/usr/local/etc/redis/redis.conf

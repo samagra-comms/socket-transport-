@@ -14,8 +14,7 @@ import { HttpModule } from '@nestjs/axios';
 import { SocketGateway } from './socket/socket.gateway';
 import { TerminusModule } from '@nestjs/terminus';
 import { config } from './config/config';
-import path from 'path';
-
+import { CustomCacheModule } from './cache.module';
 @Module({
   imports: [
     WinstonModule.forRootAsync({
@@ -59,6 +58,7 @@ import path from 'path';
       load: [config],
     }),
     TerminusModule,
+    CustomCacheModule,
     CacheModule.register(),
   ],
   controllers: [AppController, HealthController],
