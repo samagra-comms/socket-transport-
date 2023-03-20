@@ -41,7 +41,7 @@ jobs:
             ${{ secrets.DOCKER_HUB_USERNAME }}/uci-transport-socket
           # generate Docker tags based on the following events/attributes
           tags: |
-            type=semver,pattern={{version}}
+            type=semver,pattern=v{{version}}
             ${{ steps.vars.outputs.tags }}
       - name: Set up Docker Buildx
         id: buildx
