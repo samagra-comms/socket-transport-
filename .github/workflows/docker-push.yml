@@ -42,7 +42,7 @@ jobs:
           # generate Docker tags based on the following events/attributes
           tags: |
             type=semver,pattern={{version}}
-            ${{ steps.vars.outputs.sha_short }}
+            ${{ steps.vars.outputs.tags }}
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
