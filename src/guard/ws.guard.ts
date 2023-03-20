@@ -1,4 +1,4 @@
-import { CanActivate, Injectable } from '@nestjs/common';
+import { CanActivate, Injectable, Logger } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import * as jwt from 'jsonwebtoken';
 
@@ -19,18 +19,20 @@ const getKey = (header, callback) => {
 
 @Injectable()
 export class WsGuard implements CanActivate {
+  private logger: Logger = new Logger('WSGuard');
+
   constructor() {}
 
   canActivate(
     context: any,
   ): boolean | any | Promise<boolean | any> | Observable<boolean | any> {
+    this.logger.error(`Trying to authenticate user`);
     const bearerToken =
       context.args[0].handshake.headers.authorization.split(' ')[1];
     return new Promise(function (resolve, reject) {
       jwt.verify(bearerToken, getKey, function (err, decoded) {
-        console.log({ decoded });
-        context.switchToHttp().getRequest().userId = decoded.sub;
-        context.switchToHttp().getRequest().userPhone =
+        context.args[0].handshake.headers.userId = decoded.sub;
+        context.args[0].handshake.headers.userPhone =
           decoded['preferred_username'];
         if (err) resolve(false);
         resolve(true);

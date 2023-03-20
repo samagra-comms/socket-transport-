@@ -42,9 +42,8 @@ export class SocketGateway
   }
 
   async handleConnection(client: Socket, ...args: any[]) {
-    this.logger.log(`Client is connected with ${client.id}`);
     this.logger.log(
-      `Client is connected with ${client.handshake.query.deviceId}`,
+      `Client is connected with clientID ${client.id} and phoneNumber ${client.handshake.query.deviceId}`,
     );
     const sessionID = client.handshake.query.deviceId;
     const userID = client.handshake.query.deviceId as string;
@@ -67,12 +66,14 @@ export class SocketGateway
   @UseGuards(WsGuard)
   @SubscribeMessage('botRequest')
   async handleMessage(client: Socket, { content, to }: any) {
-    this.logger.log({
-      msg: `Receiving chatbot request for ${to} with ${JSON.stringify(
-        content,
-      )} `,
-    });
+    this.logger.log(
+      `Receiving chatbot request for ${to} with ${JSON.stringify(
+        client.handshake.headers.userPhone,
+      )}`,
+    );
     to = getUuidByString('uci-pwa');
+    const userId = 'phone:' + client.handshake.headers.userPhone;
+    content.from = userId;
     this.appService.requestToAdapter({ content, to }, this.server);
     return {};
   }
