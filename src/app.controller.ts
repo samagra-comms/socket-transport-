@@ -27,12 +27,12 @@ export class AppController {
       this.logger.log(
         `Received Response from Adapter => ${JSON.stringify(req.body)}`,
       );
-      const { message, to } = req.body;
+      const { message, to, messageId } = req.body;
       const clientId: string = await this.cacheManager.get(to);
       this.logger.log(`Sending message to: ${to} and clientID ${clientId}`);
       this.wsg.server
         .to(clientId)
-        .emit('botResponse', { content: message, from: to });
+        .emit('botResponse', { content: message, from: to, messageId });
       return { status: 'OK' };
     } catch (error) {
       this.logger.error('Error while emitting bot response', error);
