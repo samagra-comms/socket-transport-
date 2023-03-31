@@ -43,7 +43,7 @@ export class SocketGateway
 
   async handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(
-      `Client is connected with clientID ${client.id} and phoneNumber ${client.handshake.query.deviceId}`,
+      `Client is connected with clientID ${client.id} and phoneNumber ${client.handshake.query.deviceId} and Client.id is`,
     );
     const sessionID = client.handshake.query.deviceId;
     const userID = client.handshake.query.deviceId as string;
