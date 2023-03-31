@@ -32,6 +32,7 @@ export class WsGuard implements CanActivate {
       context.args[0].handshake.headers.authorization.split(' ')[1];
     return new Promise(function (resolve, reject) {
       jwt.verify(bearerToken, getKey, function (err, decoded) {
+        this.logger.error(decoded);
         context.args[0].handshake.headers.userId = decoded.sub;
         context.args[0].handshake.headers.userPhone =
           decoded['preferred_username'];
