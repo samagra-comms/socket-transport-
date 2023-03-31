@@ -72,7 +72,7 @@ export class SocketGateway
       )}`,
     );
     to = getUuidByString('uci-pwa');
-    const userId = 'ucipwa:' + client.handshake.headers.userPhone;
+    const userId = client.handshake.headers.channel + client.handshake.headers.userPhone;
     content.from = userId;
     this.appService.requestToAdapter({ content, to }, this.server);
     return {};
