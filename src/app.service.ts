@@ -28,7 +28,7 @@ export class AppService {
       const reqst = {
         body: req.content.text,
         media: req.content.media,
-        userId: req.content.userId,
+        userId: req.to,
         appId: req.content.appId,
         channel: req.content.channel,
         from: req.content.from,
@@ -39,7 +39,7 @@ export class AppService {
       const params = JSON.stringify(reqst);
       this.logger.log({ message: `Adapter Request => ${params}` });
       this.httpService
-        .post(`${adapterEndpoint}`, params, {
+        .post(`${adapterEndpoint}/prompt`, params, {
           headers: {
             'Content-Type': 'application/json',
           },

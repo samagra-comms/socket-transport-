@@ -7,6 +7,7 @@ export const config = () => ({
     socket_timeout: process.env.SKT_TIMEOUT || 60000,
     socket_ping_interval: process.env.SKT_PING_INTERVAL || 60000,
     socket_ping_timeout: process.env.SKT_PING_TIMEOUT || 60000,
+    jwks_uri: process.env.JWKS_URL
   },
   ADAPTER_URL: process.env.ADAPTER_URL,
   database: {},
