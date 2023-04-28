@@ -14,7 +14,6 @@ import { Cache } from 'cache-manager';
 import { AppService } from 'src/app.service';
 import { config } from '../config/config';
 
-import getUuidByString = require('uuid-by-string');
 import { WsGuard } from 'src/guard/ws.guard';
 
 const appConfig = config().app;
@@ -71,9 +70,8 @@ export class SocketGateway
         client.handshake.headers.userPhone,
       )}`,
     );
-    to = getUuidByString(to);
-    const userId = (client.handshake.headers.channel as string) + ":" + (client.handshake.headers.userPhone as string);
-    content.from = userId;
+    // const userId = (client.handshake.headers.channel as string) + ":" + (client.handshake.headers.userPhone as string);
+    // content.from = userId;
     this.appService.requestToAdapter({ content, to }, this.server);
     return {};
   }
