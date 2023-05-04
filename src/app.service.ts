@@ -26,6 +26,7 @@ export class AppService {
     const adapterEndpoint = this.configService.get('ADAPTER_URL');
     try {
       const reqst = {
+        conversationId: req.conversationId,
         body: req.content.text,
         media: req.content.media,
         userId: req.to,

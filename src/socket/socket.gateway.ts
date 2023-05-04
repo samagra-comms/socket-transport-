@@ -64,7 +64,7 @@ export class SocketGateway
 
   @UseGuards(WsGuard)
   @SubscribeMessage('botRequest')
-  async handleMessage(client: Socket, { content, to }: any) {
+  async handleMessage(client: Socket, { content, to, conversationId }: any) {
     this.logger.log(
       `Receiving chatbot request for ${to} with ${JSON.stringify(
         client.handshake.headers.userPhone,
@@ -72,7 +72,7 @@ export class SocketGateway
     );
     // const userId = (client.handshake.headers.channel as string) + ":" + (client.handshake.headers.userPhone as string);
     // content.from = userId;
-    this.appService.requestToAdapter({ content, to }, this.server);
+    this.appService.requestToAdapter({ content, to, conversationId }, this.server);
     return {};
   }
 

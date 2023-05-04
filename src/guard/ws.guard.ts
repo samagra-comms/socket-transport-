@@ -20,9 +20,14 @@ export class WsGuard implements CanActivate {
     });
   
     this.getKey = (header, callback) => {
+      console.log('JWT header:', header);
       this.client.getSigningKey(header.kid, function (err, key) {
-        const signingKey = key.publicKey || key.rsaPublicKey;
-        callback(null, signingKey);
+        if (err) {
+          console.error('Error fetching signing key:', err);
+        } else {
+          const signingKey = key.publicKey || key.rsaPublicKey;
+          callback(null, signingKey);
+        }
       });
     };
   }
@@ -35,13 +40,18 @@ export class WsGuard implements CanActivate {
       context.args[0].handshake.headers.authorization.split(' ')[1];
     console.log({bearerToken});
     return new Promise((resolve, reject) => { 
-      jwt.verify(bearerToken, this.getKey, (err, decoded) => { 
-        console.log({ decoded });
-        context.args[0].handshake.headers.userId = decoded.sub;
-        context.args[0].handshake.headers.userPhone =
-          decoded['preferred_username'];
-        if (err) resolve(false);
-        resolve(true);
+      jwt.verify(bearerToken, this.getKey, (err, decoded) => {
+        if (err) {
+          console.error('JWT verification error:', err);
+          resolve(false);
+        }else{
+          console.log({ decoded });
+          context.args[0].handshake.headers.userId = decoded.sub;
+          context.args[0].handshake.headers.userPhone =
+            decoded['preferred_username'];
+          resolve(true);
+        }
+       
       });
     });
   }
