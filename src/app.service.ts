@@ -36,7 +36,8 @@ export class AppService {
         context: req.content.context,
         to: req.to,
         messageId: this.randomId(),
-        identifier: req.content.identifier
+        identifier: req.content.identifier,
+        asrId: req.content.asrId
       };
       const params = JSON.stringify(reqst);
       console.log('params',params)
