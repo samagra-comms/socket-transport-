@@ -1,6 +1,6 @@
 import * as winston from 'winston';
 
-import { CacheModule, Logger, Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import {
   WinstonModule,
   utilities as nestWinstonModuleUtilities,
@@ -14,7 +14,9 @@ import { HttpModule } from '@nestjs/axios';
 import { SocketGateway } from './socket/socket.gateway';
 import { TerminusModule } from '@nestjs/terminus';
 import { config } from './config/config';
-import { CustomCacheModule } from './cache.module';
+import { CacheModule } from '@nestjs/common';
+import * as redisStore from 'cache-manager-redis-store';
+
 @Module({
   imports: [
     WinstonModule.forRootAsync({
@@ -58,8 +60,13 @@ import { CustomCacheModule } from './cache.module';
       load: [config],
     }),
     TerminusModule,
-    CustomCacheModule,
-    CacheModule.register(),
+    CacheModule.register({
+      store: redisStore,
+      host: process.env.TRANSPORT_SOCKET_CACHE_HOST,
+      port: process.env.TRANSPORT_SOCKET_CACHE_PORT,
+      max: 200000,
+      ttl: 86400,
+    }),
   ],
   controllers: [AppController, HealthController],
   providers: [AppService, SocketGateway, Logger],
