@@ -16,7 +16,7 @@ export class AppController {
   public appConfig;
   constructor(
     private readonly wsg: SocketGateway,
-    @Inject('CustomCacheToken') private cacheManager: Cache,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {
     this.appConfig = config().app;
   }

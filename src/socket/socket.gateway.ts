@@ -34,7 +34,7 @@ export class SocketGateway
 
   constructor(
     private readonly appService: AppService,
-    @Inject('CustomCacheToken') private cacheManager: Cache,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   afterInit(server: Server) {
@@ -47,7 +47,8 @@ export class SocketGateway
     );
     const sessionID = client.handshake.query.deviceId;
     const userID = client.handshake.query.deviceId as string;
-    await this.cacheManager.set(userID, client.id, 86400 * 1000);
+    await this.cacheManager.set(userID, client.id);
+    this.logger.log(`Storing userID in cache: ${userID}, id: ${client.id}`);
     client['sessionID'] = sessionID;
     client['userID'] = userID;
     client.join(userID);
@@ -60,7 +61,7 @@ export class SocketGateway
 
   async handleDisconnect(client: Socket) {
     this.logger.log(`Client is disconnected = ${client.id}`);
-    await this.cacheManager.set(client['userID'], null, 86400 * 1000);
+    await this.cacheManager.del(client['userID']);
   }
 
   @UseGuards(WsGuard)
@@ -81,7 +82,7 @@ export class SocketGateway
   @SubscribeMessage('endConnection')
   async handleEndConnection(client: Socket) {
     this.logger.log({ msg: 'The client has closed the bot' });
-    await this.cacheManager.set(client['userID'], null, 86400 * 1000);
+    await this.cacheManager.del(client['userID']);
     client.disconnect(true);
     return {};
   }
