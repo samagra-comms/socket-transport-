@@ -37,7 +37,7 @@ export class WsGuard implements CanActivate {
     return new Promise(function (resolve, reject) {
       jwt.verify(bearerToken, getKey, function (err, decoded) {
         if (err || !decoded || !decoded['sub'] || !decoded['preferred_username']) {
-          reject('User could not be resolved!');
+          resolve('User could not be resolved!');
           return;
         }
         console.log(decoded);
