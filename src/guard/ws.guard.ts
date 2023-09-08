@@ -6,13 +6,17 @@ import * as jwt from 'jsonwebtoken';
 const jwksClient = require('jwks-rsa');
 
 const client = jwksClient({
-    jwksUri: 'http://103.154.251.109:9011/.well-known/jwks.json',
+    jwksUri: process.env.TRANSPORT_SOCKET_JWT_AUTH_URL,
     requestHeaders: {}, // Optional
     timeout: 30000, // Defaults to 30s
 });
 
 const getKey = (header, callback) => {
   client.getSigningKey(header.kid, function (err, key) {
+    if (err || !key || !(key.publicKey || key.rsaPublicKey)) {
+      callback(err, null);
+      return;
+    }
     const signingKey = key.publicKey || key.rsaPublicKey;
     callback(null, signingKey);
   });
@@ -27,18 +31,24 @@ export class WsGuard implements CanActivate {
   canActivate(
     context: any,
   ): boolean | any | Promise<boolean | any> | Observable<boolean | any> {
-    this.logger.error(`Trying to authenticate user`);
+    this.logger.log(`Trying to authenticate user`);
     const bearerToken =
       context.args[0].handshake.headers.authorization.split(' ')[1];
     return new Promise(function (resolve, reject) {
       jwt.verify(bearerToken, getKey, function (err, decoded) {
+        if (err || !decoded || !decoded['sub'] || !decoded['preferred_username']) {
+          reject('User could not be resolved!');
+          return;
+        }
         console.log(decoded);
         context.args[0].handshake.headers.userId = decoded.sub;
         context.args[0].handshake.headers.userPhone =
           decoded['preferred_username'];
-        if (err) resolve(false);
         resolve(true);
       });
+    })
+    .catch(err => {
+      this.logger.error(err);
     });
   }
 }
