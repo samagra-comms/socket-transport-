@@ -5,15 +5,15 @@ import * as jwt from 'jsonwebtoken';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const jwksClient = require('jwks-rsa');
 
-const client = jwksClient({
-    jwksUri: process.env.TRANSPORT_SOCKET_JWT_AUTH_URL,
-    requestHeaders: {}, // Optional
-    timeout: 30000, // Defaults to 30s
-});
-
 const getKey = (header, callback) => {
+  let client = jwksClient({
+      jwksUri: process.env.TRANSPORT_SOCKET_JWT_AUTH_URL,
+      requestHeaders: {}, // Optional
+      timeout: 30000, // Defaults to 30s
+  });
   client.getSigningKey(header.kid, function (err, key) {
     if (err || !key || !(key.publicKey || key.rsaPublicKey)) {
+      console.error('User could not be resolved!');
       callback(err, null);
       return;
     }
@@ -37,6 +37,7 @@ export class WsGuard implements CanActivate {
     return new Promise(function (resolve, reject) {
       jwt.verify(bearerToken, getKey, function (err, decoded) {
         if (err || !decoded || !decoded['sub'] || !decoded['preferred_username']) {
+          console.error('User could not be resolved!');
           resolve('User could not be resolved!');
           return;
         }
