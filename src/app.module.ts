@@ -61,9 +61,9 @@ import * as redisStore from 'cache-manager-redis-store';
     }),
     TerminusModule,
     CacheModule.register({
-      store: redisStore,
-      host: process.env.TRANSPORT_SOCKET_CACHE_HOST,
-      port: process.env.TRANSPORT_SOCKET_CACHE_PORT,
+      store: config().app.cacheStore == 'redis' ? redisStore : 'memory',
+      host: config().app.cacheStore == 'redis' ? config().app.redisHost : '',
+      port: config().app.cacheStore == 'redis' ? config().app.redisPort : '',
       max: 200000,
       ttl: 86400,
     }),
