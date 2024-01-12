@@ -64,7 +64,11 @@ export class SocketGateway
 
   @UseGuards(WsGuard)
   @SubscribeMessage('botRequest')
-  async handleMessage(client: Socket, { content, to, conversationId }: any) {
+  async handleMessage(client: Socket, req: any) {
+    console.log("request",req)
+    if(Array.isArray(req)) req = req[0]
+    let { content, to, conversationId } = req
+    console.log('updated request', { content, to, conversationId })
     this.logger.log(
       `Receiving chatbot request for ${to} with ${JSON.stringify(
         client.handshake.headers.userPhone,
