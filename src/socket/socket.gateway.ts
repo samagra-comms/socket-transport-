@@ -68,6 +68,8 @@ export class SocketGateway
     console.log("request",req)
     if(Array.isArray(req)) req = req[0]
     let { content, to, conversationId } = req
+    to = content?.userId;
+    conversationId = content?.conversationId
     console.log('updated request', { content, to, conversationId })
     this.logger.log(
       `Receiving chatbot request for ${to} with ${JSON.stringify(
